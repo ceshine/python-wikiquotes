@@ -13,8 +13,8 @@ def remove_i_tags(tree):
 
 
 def remove_credit(quote):
-    if quote.endswith(('–', '-')):
-        quote = quote[:-1].rstrip()
+    if quote[0].endswith(('–', '-')):
+        quote[0] = quote[0][:-1].rstrip()
     return quote
 
 

@@ -1,6 +1,7 @@
 import wikiquote
 import unittest
 
+
 class QuotesTest(unittest.TestCase):
     """
     Test wikiquote.quotes()
@@ -18,19 +19,20 @@ class QuotesTest(unittest.TestCase):
 
     def test_unsupported_lang(self):
         self.assertRaises(wikiquote.utils.UnsupportedLanguageException,
-                         wikiquote.quotes,
-                         'Matrix',
-                         lang='hlhljopjpojkopijj')
+                          wikiquote.quotes,
+                          'Matrix',
+                          lang='hlhljopjpojkopijj')
 
     def test_normal_quotes(self):
         for lang in wikiquote.langs.SUPPORTED_LANGUAGES:
             quotes = wikiquote.quotes('Barack Obama', lang=lang)
-            self.assertTrue(len(quotes) > 0)
+            self.assertTrue(len(quotes[0]) > 0)
+            self.assertTrue(len(quotes[1]) > 0)
 
     def test_max_quotes(self):
-        quotes = wikiquote.quotes('The Matrix (film)', max_quotes = 8)
-        self.assertEqual(len(quotes), 8)
+        quotes = wikiquote.quotes('The Matrix (film)', max_quotes=8)
+        self.assertEqual(len(quotes[0]), 8)
 
     def test_max_quotes_and_lang(self):
-        quotes = wikiquote.quotes('Matrix', lang='fr', max_quotes = 8)
-        self.assertEqual(len(quotes), 8)
+        quotes = wikiquote.quotes('Matrix', lang='fr', max_quotes=8)
+        self.assertEqual(len(quotes[0]), 8)

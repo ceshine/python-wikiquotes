@@ -106,8 +106,9 @@ def extract_quotes_li(tree, max_quotes, headings, word_blacklist):
             skip_to_next_heading = False
             heading_text = node.text_content().lower()
 
-            # Commence skipping
+            # Commence skipping (using a blacklist)
             if heading_text in headings:
+                # print(f"skipping {heading_text}")
                 skip_to_next_heading = True
 
             continue
@@ -133,7 +134,12 @@ def extract_quotes_li(tree, max_quotes, headings, word_blacklist):
 
         # Handle <li>'s
         uls = node.xpath('ul')
+        additional_information = []
         for ul in uls:
+            for li in ul.xpath('li'):
+                additional_information.append(
+                    clean_txt(li.text_content())
+                )
             ul.getparent().remove(ul)
 
         if not is_quote_node(node):
@@ -143,7 +149,8 @@ def extract_quotes_li(tree, max_quotes, headings, word_blacklist):
         txt = clean_txt(txt)
         if is_quote(txt, word_blacklist) and max_quotes > len(quotes_list):
             txt_normal = ' '.join(txt.split())
-            quotes_list.append(txt_normal)
+            quotes_list.append(
+                [txt_normal, additional_information, heading_text])
 
             if max_quotes == len(quotes_list):
                 break

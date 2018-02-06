@@ -1,4 +1,5 @@
-import lxml.html
+from lxml.html.soupparser import fromstring
+
 from . import utils
 from . import langs
 
@@ -36,6 +37,20 @@ def random_titles(lang='en', max_titles=20):
 
 
 def quotes(page_title, max_quotes=utils.DEFAULT_MAX_QUOTES, lang='en'):
+    """Get the quotes from the specified page
+
+    Args:
+        pagetitle  (str): The page title
+        max_quotes (str): The maximum number of quotes returned.
+        lang       (str): The target page language.
+
+    Returns:
+        (list , list): list of quotes and categories
+
+        Every individual quote is a [str, list of str, str] list,
+        which represents the quote, a list of additional information, and
+        the name of the section from the page.
+    """
     if lang not in langs.SUPPORTED_LANGUAGES:
         raise utils.UnsupportedLanguageException(
             'Unsupported language: ' + lang)
@@ -51,5 +66,8 @@ def quotes(page_title, max_quotes=utils.DEFAULT_MAX_QUOTES, lang='en'):
             'Title returned a disambiguation page.')
 
     html_content = data['parse']['text']['*']
-    html_tree = lxml.html.fromstring(html_content)
-    return langs.extract_quotes_lang(lang, html_tree, max_quotes)
+    html_tree = fromstring(html_content)
+    return (
+        langs.extract_quotes_lang(lang, html_tree, max_quotes),
+        [c["*"] for c in data['parse']['categories']]
+    )
