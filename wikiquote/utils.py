@@ -81,6 +81,10 @@ def is_quote_node(node):
     return True
 
 
+def extract_description(tree):
+    return tree.xpath("//p")[0].text_content()
+
+
 def extract_quotes_li(tree, max_quotes, headings, word_blacklist):
     # Check for quotes inside list items and description lists
     # This function works well for EN and ES versions of Wikiquote articles

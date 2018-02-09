@@ -45,7 +45,7 @@ def quotes(page_title, max_quotes=utils.DEFAULT_MAX_QUOTES, lang='en'):
         lang       (str): The target page language.
 
     Returns:
-        (list , list): list of quotes and categories
+        (list , list, str): list of quotes, categories, and a description string.
 
         Every individual quote is a [str, list of str, str] list,
         which represents the quote, a list of additional information, and
@@ -69,5 +69,6 @@ def quotes(page_title, max_quotes=utils.DEFAULT_MAX_QUOTES, lang='en'):
     html_tree = fromstring(html_content)
     return (
         langs.extract_quotes_lang(lang, html_tree, max_quotes),
-        [c["*"] for c in data['parse']['categories']]
+        [c["*"] for c in data['parse']['categories']],
+        utils.extract_description(html_tree)
     )

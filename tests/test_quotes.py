@@ -28,6 +28,7 @@ class QuotesTest(unittest.TestCase):
             quotes = wikiquote.quotes('Barack Obama', lang=lang)
             self.assertTrue(len(quotes[0]) > 0)
             self.assertTrue(len(quotes[1]) > 0)
+            self.assertTrue(isinstance(quotes[2], str))
 
     def test_max_quotes(self):
         quotes = wikiquote.quotes('The Matrix (film)', max_quotes=8)
