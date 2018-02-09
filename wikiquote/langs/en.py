@@ -3,7 +3,8 @@ from .. import utils
 
 WORD_BLACKLIST = ['quoted', 'Variant:', 'Retrieved', 'Notes:', 'article:']
 MAIN_PAGE = "Main Page"
-HEADINGS = ['disputed', 'misattributed', 'cast', 'see also', 'external links']
+HEADINGS = ['disputed', 'misattributed', 'cast',
+            'see also', 'external links', 'quotes about']
 
 
 def extract_quotes(tree, max_quotes):

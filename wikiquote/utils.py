@@ -58,9 +58,9 @@ def is_quote(txt, word_blacklist):
 
 
 def is_quote_node(node):
-    # Discard nodes with the <small> tag
-    if node.find('small') is not None:
-        return False
+    # # Discard nodes with the <small> tag
+    # if node.find('small') is not None:
+    #     return False
 
     # Discard nodes that are just a link
     # (using xpath so lxml will show text nodes)
@@ -111,18 +111,19 @@ def extract_quotes_li(tree, max_quotes, headings, word_blacklist):
             heading_text = node.text_content().lower()
 
             # Commence skipping (using a blacklist)
-            if heading_text in headings:
-                # print(f"skipping {heading_text}")
-                skip_to_next_heading = True
-
+            for no_good in headings:
+                if heading_text.startswith(no_good):
+                    # print(f"skipping {heading_text}")
+                    skip_to_next_heading = True
+                    break
             continue
 
         # <dl>'s are assumed to be multi-line dialogue
         if node.tag == 'dl':
             dds = node.xpath('dd')
 
-            if not all(is_quote_node(dd) for dd in dds):
-                continue
+            # if not all(is_quote_node(dd) for dd in dds):
+            #     continue
 
             full_dialogue = '\n'.join(
                 dd.text_content().strip()
@@ -145,6 +146,13 @@ def extract_quotes_li(tree, max_quotes, headings, word_blacklist):
                     clean_txt(li.text_content())
                 )
             ul.getparent().remove(ul)
+        # Handle <small>'s
+        smalls = node.xpath('small')
+        for sl in smalls:
+            additional_information.append(
+                clean_txt(sl.text_content())
+            )
+            sl.getparent().remove(sl)
 
         if not is_quote_node(node):
             continue
@@ -153,9 +161,8 @@ def extract_quotes_li(tree, max_quotes, headings, word_blacklist):
         txt = clean_txt(txt)
         if is_quote(txt, word_blacklist) and max_quotes > len(quotes_list):
             txt_normal = ' '.join(txt.split())
-            quotes_list.append(
-                [txt_normal, additional_information, heading_text])
-
+            quotes_list.append([
+                txt_normal, additional_information, heading_text])
             if max_quotes == len(quotes_list):
                 break
 
